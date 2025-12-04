@@ -1,0 +1,3 @@
+mod m20251204_222043_name1;
+mod m20251204_222257_create_trades_table;
+mod m20251204_222434_create_wallets_table;

@@ -4,6 +4,8 @@ use serde::{Deserialize, Serialize};
 use anyhow::{Result, Context};
 use std::sync::Arc;
 use tokio::sync::RwLock;
+use std::env;
+use dotenvy::dotenv;
 
 #[derive(Debug, Clone, Deserialize)]
 pub struct BotSecrets {
@@ -49,12 +51,12 @@ impl SecretsManager {
     }
 
     async fn load_from_env(settings: &Settings) -> Result<BotSecrets> {
-        dotenv::dotenv().ok();
+        dotenv().ok();
 
-        let telegram_token = std::env::var("TELEGRAM_BOT_TOKEN")
+        let telegram_token = env::var("TELEGRAM_BOT_TOKEN")
             .context("TELEGRAM_BOT_TOKEN must be set")?;
 
-        let jupiter_api_key = std::env::var("JUPITER_API_KEY").ok();
+        let jupiter_api_key = env::var("JUPITER_API_KEY").ok();
 
         Ok(BotSecrets {
             telegram_token: SecretString::new(telegram_token.into_boxed_str()),
@@ -82,13 +84,13 @@ impl SecretsManager {
 
     pub async fn get_telegram_token(&self) -> String {
         let secrets = self.secrets.read().await;
-        secrets.telegram_token.expose_secret().clone().to_string()
+        secrets.telegram_token.expose_secret().to_string()
     }
 
     pub async fn get_jupiter_api_key(&self) -> Option<String> {
         let secrets = self.secrets.read().await;
         secrets.jupiter_api_key.as_ref()
-            .map(|s| s.expose_secret().clone().to_string())
+            .map(|s| s.expose_secret().to_string())
     }
 
     pub async fn get_master_encryption_key(&self) -> SecretString {

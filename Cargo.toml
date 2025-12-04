@@ -79,7 +79,7 @@ rand_core = "0.9.3"
 
 # ==================== Configuration ====================
 config = "0.15.19"
-dotenv = "0.15"
+dotenvy = "0.15"
 envy = "0.4"
 figment = { version = "0.10", features = ["env", "toml", "json", "yaml"] }
 
@@ -135,4 +135,7 @@ debug = false
 incremental = false
 
 [workspace]
+members = [
+  "migration"
+]
 resolver = "2"
