@@ -112,8 +112,8 @@ http = "1.4.0"
 bytes = "1.5"
 
 # ==================== Cloud Secrets (Optional) ====================
-# aws-config = { version = "1.0", optional = true }
-# aws-sdk-secretsmanager = { version = "1.0", optional = true }
+aws-config = { version = "1.0", optional = true }
+aws-sdk-secretsmanager = { version = "1.0", optional = true }
 vaultrs = { version = "0.7.4", optional = true }
 azure_identity = { version = "0.30.0", optional = true }
 azure_security_keyvault = { version = "0.21", optional = true }
@@ -145,7 +145,7 @@ sqlite = ["sea-orm/sqlx-sqlite"]
 
 # Secrets backends
 local-secrets = []
-# aws-secrets = ["aws-config", "aws-sdk-secretsmanager"]
+aws-secrets = ["aws-config", "aws-sdk-secretsmanager"]
 vault-secrets = ["vaultrs"]
 azure-secrets = ["azure_identity", "azure_security_keyvault"]
 
@@ -168,7 +168,7 @@ email-notifications = ["lettre", "serde_with"]
 production = [
     "postgres",
     "axum-server",
-    # "aws-secrets",
+    "aws-secrets",
     "advanced-monitoring",
     "email-notifications",
 ]
