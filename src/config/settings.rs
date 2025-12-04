@@ -2,6 +2,10 @@ use config::{Config, ConfigError, Environment, File};
 use serde::Deserialize;
 use secrecy::{SecretString};
 use std::env;
+use dotenvy::dotenv;
+
+
+
 
 #[derive(Debug, Deserialize, Clone)]
 pub struct DatabaseSettings {
@@ -218,8 +222,13 @@ pub fn default_app_version() -> String { "0.1.0".to_string() }
 pub fn default_log_level() -> String { "info".to_string() }
 
 pub fn default_database() -> DatabaseSettings {
+    dotenv().ok();
+
+    let database_url = env::var("DATABASE_URL")
+        .expect("DATABASE_URL must be set in .env file");
+
     DatabaseSettings {
-        url: SecretString::new("postgres://postgres:password@localhost:5432/solana_bot".to_string().into_boxed_str()),
+        url: SecretString::new(database_url.to_string().into_boxed_str()),
         pool_max_connections: default_pool_max_connections(),
         pool_min_connections: default_pool_min_connections(),
         connect_timeout_secs: default_connect_timeout_secs(),
@@ -309,6 +318,7 @@ pub fn default_monitoring() -> MonitoringSettings {
 
 impl Settings {
     pub fn new() -> Result<Self, ConfigError> {
+        dotenv().ok();
         let run_mode = env::var("APP_ENV").unwrap_or_else(|_| "development".into());
 
         let config_builder = Config::builder()
